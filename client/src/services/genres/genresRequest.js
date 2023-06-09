@@ -1,11 +1,17 @@
 import httpRequest from '../../config/api.config';
 import {
+  addGenreFailed,
+  addGenreStart,
+  addGenreSuccess,
   deleteGenreFailed,
   deleteGenreStart,
   deleteGenreSuccess,
   getGenresFailed,
   getGenresStart,
   getGenresSuccess,
+  updateGenreFailed,
+  updateGenreStart,
+  updateGenreSuccess,
 } from './genresSlice';
 
 export const getGenres = async (accessToken, dispatch) => {
@@ -20,6 +26,40 @@ export const getGenres = async (accessToken, dispatch) => {
     return res.data;
   } catch (err) {
     dispatch(getGenresFailed());
+    return false;
+  }
+};
+
+export const addGenre = async (accessToken, body, dispatch) => {
+  dispatch(addGenreStart());
+  try {
+    await httpRequest.post('/genre', body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    dispatch(addGenreSuccess());
+    getGenres(accessToken, dispatch);
+    return true;
+  } catch (err) {
+    dispatch(addGenreFailed());
+    return false;
+  }
+};
+
+export const updateGenre = async (accessToken, genreId, body, dispatch) => {
+  dispatch(updateGenreStart());
+  try {
+    await httpRequest.post(`/genre/${genreId}`, body, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    dispatch(updateGenreSuccess());
+    getGenres(accessToken, dispatch);
+    return true;
+  } catch (err) {
+    dispatch(updateGenreFailed());
     return false;
   }
 };

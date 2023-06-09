@@ -1,6 +1,13 @@
 import { format, getTime, formatDistanceToNow } from 'date-fns';
-
+// eslint-disable-next-line import/no-unresolved
+import moment from 'moment';
 // ----------------------------------------------------------------------
+
+export function momentDate(date, newFormat) {
+  const fm = newFormat || 'DD/MM/YYYY HH:mm:ss';
+
+  return date ? moment(date).format(fm) : '';
+}
 
 export function fDate(date, newFormat) {
   const fm = newFormat || 'dd MMM yyyy';

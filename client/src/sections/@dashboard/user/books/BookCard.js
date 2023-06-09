@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { Box, Card, Link, Typography, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -18,8 +18,10 @@ const StyledProductImg = styled('img')({
 export default function BookCard({ product }) {
   const { id, bookTitle, bookAuthor, bookGenre, bookPages, bookPlot, bookCover, bookSold } = product;
 
+  const navigate = useNavigate();
+
   return (
-    <Card>
+    <Card sx={{ cursor: 'pointer' }} onClick={() => navigate(`/dashboard/book/${id}`)}>
       <Box sx={{ pt: '100%', position: 'relative' }}>
         <Label
           variant="filled"
@@ -30,6 +32,7 @@ export default function BookCard({ product }) {
             right: 16,
             position: 'absolute',
             textTransform: 'uppercase',
+            cursor: 'pointer',
           }}
         >
           {product?.bookGenre?.genreName}

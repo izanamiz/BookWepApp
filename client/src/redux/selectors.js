@@ -4,3 +4,4 @@ export const bookListSelector = (state) => state.books.bookList
 
 export const genreListSelector = (state) => state.genres.genreList
 
+export const reviewListSelector = (state) => state.reviews.reviewList

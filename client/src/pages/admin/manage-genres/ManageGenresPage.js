@@ -27,6 +27,7 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 // sections
 import { GenreListBody, GenreListHead, GenreListToolbar } from '../../../sections/@dashboard/admin/manage-genres';
+import GenreForm from '../../../sections/@dashboard/admin/manage-genres/GenreForm';
 // ----------------------------------------------------------------------
 
 function applySortFilter(array, query) {
@@ -88,9 +89,9 @@ export default function ManageGenresPage() {
           <Typography variant="h4" gutterBottom>
             Genre
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Genre
-          </Button>
+          
+          <GenreForm />
+
         </Stack>
 
         <Card>

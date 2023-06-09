@@ -1,24 +1,23 @@
 import { useState } from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import { useNavigate } from 'react-router-dom';
+import { Button, TextField, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import Label from '../../../../components/label/Label';
+import Iconify from '../../../../components/iconify/Iconify';
+import { addGenre, updateGenre } from '../../../../services/genres/genresRequest';
+import { showErrorToast, showSuccessToast } from '../../../../utils/toastUtil';
+import { GenreFormValidationSchema } from '../../../../utils/validation';
 
-export default function GenreForm({ genreName = '', genreId }) {
-  console.log(genreName);
-  const navigate = useNavigate();
+export default function GenreForm({ genreName, genreId }) {
+  const token = localStorage.getItem('token');
 
   const dispatch = useDispatch();
 
-  const [genre, setGenre] = useState(genreName);
+  const [formData, setFormData] = useState({
+    genre_name: genreName || '',
+  });
 
   const [open, setOpen] = useState(false);
+  const [errors, setErrors] = useState({});
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -30,35 +29,103 @@ export default function GenreForm({ genreName = '', genreId }) {
 
   const handleChange = (e) => {
     e.preventDefault();
-    setGenre(e.target.value);
+    const { name, value } = e.target;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
   };
+
+  const handleAddGenre = async () => {
+    try {
+      await GenreFormValidationSchema.validate(formData, { abortEarly: false });
+
+      addGenre(token, formData, dispatch).then((res) => {
+        if (res) {
+          showSuccessToast('Add new Genre Successfully');
+        } else {
+          showErrorToast('Add new Genre Failed');
+        }
+      });
+      setOpen(false);
+    } catch (error) {
+      const fieldErrors = {};
+      error.inner.forEach((validationError) => {
+        fieldErrors[validationError.path] = validationError.message;
+      });
+      setErrors(fieldErrors);
+    }
+  };
+
+  const handleUpdateGenre = async () => {
+    try {
+      await GenreFormValidationSchema.validate(formData, { abortEarly: false });
+
+      updateGenre(token, genreId, formData, dispatch).then((res) => {
+        if (res) {
+          showSuccessToast('Update Successfully');
+        } else {
+          showErrorToast('Update Failed');
+        }
+      });
+      setOpen(false);
+    } catch (error) {
+      const fieldErrors = {};
+      error.inner.forEach((validationError) => {
+        fieldErrors[validationError.path] = validationError.message;
+      });
+      setErrors(fieldErrors);
+      console.log(fieldErrors)
+    }
+  };
+
+  const isFieldValid = (fieldName) => !errors[fieldName];
+
+  const getFieldError = (fieldName) => errors[fieldName] || '';
 
   return (
     <div>
-      <Label color="success" onClick={handleClickOpen} sx={{ cursor: 'pointer' }}>
-        Update
-      </Label>
+      {genreId ? (
+        <Label color="success" onClick={handleClickOpen} sx={{ cursor: 'pointer' }}>
+          Update
+        </Label>
+      ) : (
+        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpen}>
+          New Genre
+        </Button>
+      )}
+
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Update</DialogTitle>
+        <DialogTitle>{genreId ? 'Update' : 'Add new Genre'}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Bạn chắc chắn muốn thay đổi thể loại <strong>{genreName}</strong> ?
+            {genreId ? (
+                `Bạn chắc chắn muốn thay đổi thể loại ${genreName}?`
+            ) : (
+              'Bạn chắc chắn muốn thêm thể loại mới ?'
+            )}
           </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
-            type="text"
             fullWidth
             variant="standard"
             name="genre_name"
             label="Genre Name"
-            value={genre}
+            value={formData.genre_name}
             onChange={handleChange}
+            error={!isFieldValid('genre_name')}
+            helperText={getFieldError('genre_name')}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Hủy bỏ</Button>
-          <Button onClick={handleClose}>Đồng ý</Button>
+          {genreId ? (
+            <Button onClick={handleUpdateGenre}>Đồng ý</Button>
+          ) : (
+            <Button onClick={handleAddGenre}>Đồng ý</Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>

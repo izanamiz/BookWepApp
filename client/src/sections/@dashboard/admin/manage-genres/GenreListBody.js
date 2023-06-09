@@ -12,7 +12,7 @@ export default function GenreListBody({ filteredGenres, page, rowsPerPage }) {
           <TableRow hover key={id} tabIndex={-1}>
             <TableCell padding="checkbox" />
 
-            <TableCell align="left">{idx}</TableCell>
+            <TableCell align="left">{id}</TableCell>
 
             <TableCell align="left">{genreName}</TableCell>
 

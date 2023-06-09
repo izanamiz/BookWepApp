@@ -12,5 +12,6 @@ export const RegisterFormValidationSchema = Yup.object().shape({
 });
 
 export const GenreFormValidationSchema = Yup.object().shape({
-  genre_name: Yup.string().required('Username is required'),
+  genre_name: Yup.string().required('Genre name is required'),
 });
+

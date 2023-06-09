@@ -17,7 +17,28 @@ const genresSlice = createSlice({
       state.error = false;
     },
     getGenresFailed: (state) => {
-      console.log(state);
+      state.isFetching = false;
+      state.error = true;
+    },
+    addGenreStart: (state) => {
+      state.isFetching = true;
+    },
+    addGenreSuccess: (state) => {
+      state.isFetching = false;
+      state.error = false;
+    },
+    addGenreFailed: (state) => {
+      state.isFetching = false;
+      state.error = true;
+    },
+    updateGenreStart: (state) => {
+      state.isFetching = true;
+    },
+    updateGenreSuccess: (state) => {
+      state.isFetching = false;
+      state.error = false;
+    },
+    updateGenreFailed: (state) => {
       state.isFetching = false;
       state.error = true;
     },
@@ -26,8 +47,10 @@ const genresSlice = createSlice({
     },
     deleteGenreSuccess: (state, action) => {
       state.isFetching = false;
+
       const deletedGenreId = action.payload;
       state.genreList = state.genreList.filter((val) => val.id !== deletedGenreId);
+
       state.error = false;
     },
     deleteGenreFailed: (state) => {
@@ -41,6 +64,12 @@ export const {
   getGenresStart,
   getGenresSuccess,
   getGenresFailed,
+  addGenreStart,
+  addGenreSuccess,
+  addGenreFailed,
+  updateGenreStart,
+  updateGenreSuccess,
+  updateGenreFailed,
   deleteGenreStart,
   deleteGenreSuccess,
   deleteGenreFailed,

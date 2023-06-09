@@ -10,11 +10,11 @@ import RegisterPage from './pages/auth/register/RegisterPage';
 import ManageBooksPage from './pages/admin/manage-books/ManageBooksPage';
 import ManageGenresPage from './pages/admin/manage-genres/ManageGenresPage';
 import BooksPage from './pages/user/books/BooksPage';
+import BookDetailPage from './pages/user/books/BookDetailPage';
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
-
   const routes = useRoutes([
     {
       path: '/dashboard',
@@ -25,13 +25,14 @@ export default function Router() {
         { path: 'manage-books', element: <ManageBooksPage /> },
         { path: 'manage-genres', element: <ManageGenresPage /> },
         { path: 'books', element: <BooksPage /> },
-
+        { path: 'book/:bookId', element: <BookDetailPage /> },
       ],
     },
     {
       path: '/login',
       element: <LoginPage />,
-    }, {
+    },
+    {
       path: '/register',
       element: <RegisterPage />,
     },
