@@ -13,7 +13,7 @@ const CartList = () => {
   const dispatch = useDispatch();
   const body = {
     quantity: 10,
-    book: { id: 5 },
+    book: { id: 3 },
     user: { id: currentUser.id },
   };
 
@@ -32,12 +32,13 @@ const CartList = () => {
               <Typography align="center">{quantity}</Typography>
               <Typography align="center">{book.id}</Typography>
               <Typography align="center">{user.id}</Typography>
-              <Button onClick={() => addCart(token, body, dispatch)}>Add</Button>
+              {/* <Button onClick={() => addCart(token, body, dispatch)}>Add</Button> */}
               <Button onClick={() => updateCart(token, id, body, dispatch)}>Update</Button>
               <Button onClick={() => deleteCart(token, id, dispatch)}>Delete</Button>
             </Stack>
           );
         })}
+        <Button onClick={() => addCart(token, body, dispatch)}>Add</Button>
     </Paper>
   );
 };

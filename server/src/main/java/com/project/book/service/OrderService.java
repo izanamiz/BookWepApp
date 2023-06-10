@@ -89,25 +89,17 @@ public class OrderService {
         }
     }
 
-    public ResponseEntity<Object> getAllOrdersByUserId(OrderDto request) {
+    public ResponseEntity<Object> getAllOrders() {
         try {
             log.info("Executing get all orders");
 
-            Optional<User> user = userRepository.findById(request.getUser().getId());
-            if (user.isEmpty()) {
-                log.info("User [{}] not found", request.getUser().getId());
-                return ResponseUtil.build(ResponseCode.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
-            }
-
-            List<Order> orders = orderRepository.findByUserId(request.getUser().getId());
-
+            List<Order> orders = orderRepository.findAll();
             return ResponseUtil.build(ResponseCode.SUCCESS, orders, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Got an error when getting all orders. Error: {}", e.getMessage());
             return ResponseUtil.build(ResponseCode.UNKNOWN_ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     // User click in each order to get its order details
     public ResponseEntity<Object> getOrderById(Long id) {
@@ -131,9 +123,9 @@ public class OrderService {
         }
     }
 
-    // Update status, address, phoneNumber, notes
-    public ResponseEntity<Object> updateById(OrderDto request, Long id) {
-        log.info("Executing update order status");
+    // User click cancel but still viewing orders, just changing the statuc to CANCEL
+    public ResponseEntity<Object> cancelOrder(OrderDto request, Long id) {
+        log.info("Executing cancel order status");
         try {
             Optional<Order> getById = orderRepository.findById(id);
             if (!getById.isPresent()) {
@@ -149,10 +141,7 @@ public class OrderService {
 
             Order order = getById.get();
             order.setUser(user.get());
-            order.setStatus(request.getStatus());
-            order.setAddress(request.getAddress());
-            order.setPhoneNumber(request.getPhoneNumber());
-            order.setNotes(request.getNotes());
+            order.setStatus("CANCEl");
             orderRepository.save(order);
 
             return ResponseUtil.build(ResponseCode.SUCCESS, mapper.map(order, OrderDto.class), HttpStatus.OK);
@@ -160,30 +149,63 @@ public class OrderService {
             log.error("Got an error when updating order status. Error: {}", e.getMessage());
             return ResponseUtil.build(ResponseCode.UNKNOWN_ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
     }
 
-    public ResponseEntity<Object> cancelOrder(Long id) {
-        log.info("Executing cancel order");
-        try {
-            Optional<Order> data = orderRepository.findById(id);
-            if (!data.isPresent()) return ResponseUtil.build(ResponseCode.DATA_NOT_FOUND, null, HttpStatus.NOT_FOUND);
+    // Update status, address, phoneNumber, notes
+//    public ResponseEntity<Object> updateById(OrderDto request, Long id) {
+//        log.info("Executing update order");
+//        try {
+//            Optional<Order> getById = orderRepository.findById(id);
+//            if (!getById.isPresent()) {
+//                log.info("Order [{}] not found", id);
+//                return ResponseUtil.build(ResponseCode.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
+//            }
+//
+//            Optional<User> user = userRepository.findById(request.getUser().getId());
+//            if (user.isEmpty()) {
+//                log.info("User [{}] not found", request.getUser().getId());
+//                return ResponseUtil.build(ResponseCode.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
+//            }
+//
+//            Order order = getById.get();
+//            order.setUser(user.get());
+//            order.setStatus(request.getStatus());
+//            order.setAddress(request.getAddress());
+//            order.setPhoneNumber(request.getPhoneNumber());
+//            order.setNotes(request.getNotes());
+//            orderRepository.save(order);
+//
+//            return ResponseUtil.build(ResponseCode.SUCCESS, mapper.map(order, OrderDto.class), HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.error("Got an error when updating order status. Error: {}", e.getMessage());
+//            return ResponseUtil.build(ResponseCode.UNKNOWN_ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
-            List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(id);
-            if (orderDetails.isEmpty()) {
-                log.info("Order details not found for order [{}]", id);
-                return ResponseUtil.build(ResponseCode.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
-            }
 
-            // Clear order details after cancel the order
-            orderDetailRepository.deleteInBatch(orderDetails);
-
-            orderRepository.delete(data.get());
-
-            return ResponseUtil.build(ResponseCode.SUCCESS, null, HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("Got an error when canceling order. Error: {}", e.getMessage());
-            return ResponseUtil.build(ResponseCode.UNKNOWN_ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+//    public ResponseEntity<Object> deleteOrder(Long id) {
+//        log.info("Executing delete order");
+//        try {
+//            Optional<Order> data = orderRepository.findById(id);
+//            if (!data.isPresent()) return ResponseUtil.build(ResponseCode.DATA_NOT_FOUND, null, HttpStatus.NOT_FOUND);
+//
+//            List<OrderDetail> orderDetails = orderDetailRepository.findByOrderId(id);
+//            if (orderDetails.isEmpty()) {
+//                log.info("Order details not found for order [{}]", id);
+//                return ResponseUtil.build(ResponseCode.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
+//            }
+//
+//            // Clear order details after cancel the order
+//            orderDetailRepository.deleteInBatch(orderDetails);
+//
+//            orderRepository.delete(data.get());
+//
+//            return ResponseUtil.build(ResponseCode.SUCCESS, null, HttpStatus.OK);
+//        } catch (Exception e) {
+//            log.error("Got an error when canceling order. Error: {}", e.getMessage());
+//            return ResponseUtil.build(ResponseCode.UNKNOWN_ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
 
 }

@@ -62,25 +62,17 @@ public class CartItemService {
         }
     }
 
-    public ResponseEntity<Object> getAllCartItemsByUserId(CartItemDto request) {
+    public ResponseEntity<Object> getAllCartItems() {
         try {
             log.info("Executing get all cart item");
 
-            Optional<User> user = userRepository.findById(request.getUser().getId());
-            if (user.isEmpty()) {
-                log.info("User [{}] not found", request.getUser().getId());
-                return ResponseUtil.build(ResponseCode.DATA_NOT_FOUND, null, HttpStatus.BAD_REQUEST);
-            }
-
-            List<CartItem> cartItems = cartItemRepository.findByUserId(request.getUser().getId());
-
+            List<CartItem> cartItems = cartItemRepository.findAll();
             return ResponseUtil.build(ResponseCode.SUCCESS, cartItems, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Got an error when get all cart item. Error: {}", e.getMessage());
             return ResponseUtil.build(ResponseCode.UNKNOWN_ERROR, null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     public ResponseEntity<Object> updateById(CartItemDto request, Long id) {
         log.info("Executing update cart item by id");

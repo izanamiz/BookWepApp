@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/v1/cart-item")
+@RequestMapping(value = "/v1/cart")
 @CrossOrigin(origins = "http://127.0.0.1:3000")
 public class CartItemController {
 
@@ -21,8 +21,8 @@ public class CartItemController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllCartItems(@RequestBody CartItemDto request) {
-        return cartItemService.getAllCartItemsByUserId(request);
+    public ResponseEntity<Object> getAllCartItems() {
+        return cartItemService.getAllCartItems();
     }
 
     @PostMapping(value = "{id}")

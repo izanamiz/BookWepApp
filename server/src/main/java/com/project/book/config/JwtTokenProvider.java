@@ -69,7 +69,7 @@ public class JwtTokenProvider {
 		try {
 			// Lấy role từ tài khoản đăng nhập
 			String role = getRole(token).replace("\"", "");
-			
+			log.info("user role {}",role);
 			//Phân quyền user/admin khi thực hiện các http request
 			if (!role.equals("admin") && request.getRequestURI().contains("/api/v1/genre")
 					&& request.getMethod().equals("POST")) {
@@ -95,11 +95,11 @@ public class JwtTokenProvider {
 					&& request.getMethod().equals("DELETE")) {
 				return false;
 			}
-			if (role.equals("admin") && request.getRequestURI().contains("/api/v1/cart-item")
+			if (role.equals("admin") && request.getRequestURI().contains("/api/v1/cart")
 					&& request.getMethod().equals("POST")) {
 				return false;
 			}
-			if (role.equals("admin") && request.getRequestURI().contains("/api/v1/cart-item")
+			if (role.equals("admin") && request.getRequestURI().contains("/api/v1/cart")
 					&& request.getMethod().equals("DELETE")) {
 				return false;
 			}

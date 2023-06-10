@@ -28,8 +28,8 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllOrders(@RequestBody OrderDto orderDto) {
-        return orderService.getAllOrdersByUserId(orderDto);
+    public ResponseEntity<Object> getAllOrders() {
+        return orderService.getAllOrders();
     }
 
     @GetMapping(value = "{id}")
@@ -38,13 +38,17 @@ public class OrderController {
     }
 
     @PostMapping(value = "{id}")
-    public ResponseEntity<Object> update(@RequestBody OrderDto request, @PathVariable Long id){
-        return orderService.updateById(request, id);
+    public ResponseEntity<Object> cancelOrder(@RequestBody OrderDto request, @PathVariable Long id){
+        return orderService.cancelOrder(request, id);
     }
-
-    @DeleteMapping(value = "{id}")
-    public ResponseEntity<Object> deleteById(@PathVariable Long id){
-        return orderService.cancelOrder(id);
-    }
+//    @PostMapping(value = "{id}")
+//    public ResponseEntity<Object> update(@RequestBody OrderDto request, @PathVariable Long id){
+//        return orderService.updateById(request, id);
+//    }
+//
+//    @DeleteMapping(value = "{id}")
+//    public ResponseEntity<Object> deleteById(@PathVariable Long id){
+//        return orderService.deleteOrder(id);
+//    }
 
 }

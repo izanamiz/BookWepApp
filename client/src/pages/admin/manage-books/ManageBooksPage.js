@@ -27,6 +27,7 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 // sections
 import { BookListBody, BookListHead, BookListToolbar } from '../../../sections/@dashboard/admin/manage-books';
+import BookForm from '../../../sections/@dashboard/admin/manage-books/BookForm';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = ['ID', 'Title', 'Author', 'Genre', 'Pages', 'Plot', 'Action'];
@@ -92,9 +93,8 @@ export default function ManageBooksPage() {
           <Typography variant="h4" gutterBottom>
             Book
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Book
-          </Button>
+          <BookForm />
+          
         </Stack>
 
         <Card>
