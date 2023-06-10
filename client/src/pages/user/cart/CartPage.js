@@ -16,12 +16,12 @@ const CartPage = () => (
       </Typography>
 
       <Grid container spacing={5}>
-        <Grid item xs={12} sm={12} md={6}>
+        <Grid item xs={12} sm={12} md={7}>
           <CartList />
         </Grid>
 
-        <Grid item xs={12} sm={12} md={6}>
-          <CustomerInfo />
+        <Grid item xs={12} sm={12} md={5}>
+          <CustomerInfo />       
         </Grid>
       </Grid>
     </Container>

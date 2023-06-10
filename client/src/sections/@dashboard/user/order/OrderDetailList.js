@@ -1,47 +1,77 @@
-import { Paper, Stack, Typography } from '@mui/material';
-import { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import {
+  Box,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Typography,
+  Button,
+  Card,
+} from '@mui/material';
+import Label from '../../../../components/label/Label';
 
-import { useDispatch, useSelector } from 'react-redux';
-import { orderDetailListSelector } from '../../../../redux/selectors';
-import { getOrderDetail } from '../../../../services/user/order/orderDetailRequest';
+const OrderDetailList = ({ detailList }) => (
+  <Paper>
+    <TableContainer>
+      <Table>
+        <TableBody>
+          {detailList.map((detail) => {
+            console.log(detail);
+            const { id, quantity, book, order } = detail;
+            return (
+              <TableRow key={id}>
+                <TableCell>
+                  <Stack alignItems="center">
+                    <Card sx={{ width: 150, height: 150 }}>
+                      <img
+                        src={detail?.book?.bookCover || 'https://cdn-icons-png.flaticon.com/512/6134/6134065.png'}
+                        alt={detail?.book?.bookTitle || 'not found'}
+                      />
+                    </Card>
+                  </Stack>
+                </TableCell>
 
-const OrderDetailList = () => {
-  const token = localStorage.getItem('token');
-
-  const { orderId } = useParams();
-
-  const dispatch = useDispatch();
-
-  const orderDetailList = useSelector(orderDetailListSelector);
-
-  useEffect(() => {
-    getOrderDetail(token, orderId, dispatch);
-  }, [orderId]);
-
-  return (
-    <Paper>
-      <Typography> Order Detail List</Typography>
-      {orderDetailList.map((detail) => {
-        const { id, quantity, order } = detail;
-        console.log(detail?.book?.id);
-        return (
-          <Stack key={id} direction="row" spacing={2}>
-            <Typography align="center">{id}</Typography>
-            <Typography align="center">{quantity}</Typography>
-            {/* <Typography align="center">{detail?.book?.id}</Typography> */}
-            {detail?.book?.bookTitle ? (
-              <Typography align="center">{detail?.book?.bookTitle}</Typography>
-            ) : (
-              <Typography align="center">Sách này không còn tồn tại</Typography>
-            )}
-            <Typography align="center">{order.id}</Typography>
-            <Typography align="center">{order.user.id}</Typography>
-          </Stack>
-        );
-      })}
-    </Paper>
-  );
-};
+                <TableCell>
+                  {book ? (
+                    <Stack spacing={5}>
+                      <Stack>
+                        <Typography align="left" variant="subtitle1">
+                          Tên sách: {detail?.book?.bookTitle}
+                        </Typography>
+                        <Typography align="left" variant="subtitle2">
+                          Tác giả: {detail?.book?.bookAuthor}
+                        </Typography>
+                        <Typography align="left" variant="subtitle2">
+                          Thể loại: {detail?.book?.bookGenre?.genreName || 'Undefined'}
+                        </Typography>
+                        <Typography align="left" variant="subtitle2">
+                          Số lượng: {quantity}
+                        </Typography>
+                      </Stack>
+                      <Label color={order.status === 'PENDING' ? 'success' : 'error'}>
+                        <Typography align="left" variant="subtitle2">
+                          {order.status}
+                        </Typography>
+                      </Label>
+                    </Stack>
+                  ) : (
+                    <Label color="error" sx={{ width: '100%' }}>
+                      <Typography align="left" variant="subtitle1">
+                        Sách không còn tồn tại trên hệ thống
+                      </Typography>
+                    </Label>
+                  )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  </Paper>
+);
 
 export default OrderDetailList;

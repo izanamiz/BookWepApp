@@ -37,7 +37,7 @@ public class Book extends BaseDao {
     @Column(name = "book_author", nullable = false)
     private String bookAuthor;
 
-    @Column(name = "book_cover", nullable = false)
+    @Column(name = "book_cover", nullable = false, columnDefinition = "TEXT")
     private String bookCover;
 
     @Column(name = "book_pages", nullable = false)

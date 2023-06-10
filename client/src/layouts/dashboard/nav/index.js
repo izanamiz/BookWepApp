@@ -14,6 +14,8 @@ import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
 import navConfig from './config';
+import adminNavConfig from './adminNavConfig';
+import userNavConfig from './userNavConfig';
 
 // ----------------------------------------------------------------------
 
@@ -66,18 +68,18 @@ export default function Nav({ openNav, onCloseNav }) {
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-              {currentUser?.username}
+                {currentUser?.username}
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              {currentUser?.role}
+                {currentUser?.role}
               </Typography>
             </Box>
           </StyledAccount>
         </Link>
       </Box>
-
-      <NavSection data={navConfig} />
+      {currentUser?.role === 'admin' ? <NavSection data={adminNavConfig} /> : <NavSection data={userNavConfig} />}
+      {/* <NavSection data={navConfig} /> */}
 
       <Box sx={{ flexGrow: 1 }} />
     </Scrollbar>

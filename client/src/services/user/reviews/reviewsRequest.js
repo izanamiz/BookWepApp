@@ -23,7 +23,8 @@ export const addReview = async (accessToken, body, dispatch) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    dispatch(addReviewSuccess(res.data));
+    // dispatch(addReviewSuccess(res.data));
+    getAllReviews(accessToken, dispatch);
     return true;
   } catch (err) {
     return false;
@@ -37,7 +38,8 @@ export const updateReview = async (accessToken, reviewId, body, dispatch) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    dispatch(updateReviewSuccess(res.data));
+    getAllReviews(accessToken, dispatch);
+    // dispatch(updateReviewSuccess(res.data));
     return true;
   } catch (err) {
     return false;

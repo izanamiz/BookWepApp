@@ -1,15 +1,21 @@
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { Grid, Container, Typography } from '@mui/material';
 // sections
-import {
-  AppWidgetSummary,
-} from '../../sections/@dashboard/app';
+import { AppWidgetSummary } from '../../sections/@dashboard/app';
 
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (currentUser.role === 'user') navigate('/dashboard/books');
+  }, [currentUser]);
   return (
     <>
       <Helmet>

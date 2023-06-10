@@ -15,3 +15,27 @@ export const GenreFormValidationSchema = Yup.object().shape({
   genre_name: Yup.string().required('Genre name is required'),
 });
 
+export const BookFormValidationSchema = Yup.object().shape({
+  bookTitle: Yup.string().required('Title is required'),
+  bookAuthor: Yup.string().required('Author is required'),
+  bookCover: Yup.string().required('Book Cover is required'),
+  bookPages: Yup.string().required('Genre name is required'),
+  bookPlot: Yup.string().required('Book Plot is required'),
+  bookReleaseDate: Yup.string().required('Book Release Date is required'),
+  bookGenre: Yup.string().required('Book Genre is required'),
+});
+
+export const ReviewFormValidationSchema = Yup.object().shape({
+  cmt: Yup.string().required('Comment is required'),
+});
+
+export const CustomerInfoFormValidationSchema = Yup.object().shape({
+  address: Yup.string().required('Address is required'),
+  phone_number: Yup.string()
+    .required('Phone Number is required')
+    .matches(/^\d+$/, 'Phone Number must be a valid number')
+    .matches(/^0/, 'Số điện thoại phải bắt đầu bằng số 0')
+    .min(10, 'Phone Number must be at least 10 digits')
+    .max(12, 'Phone Number can have maximum 12 digits'),
+  notes: Yup.string().required('Note is required'),
+});

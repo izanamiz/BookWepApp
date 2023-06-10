@@ -38,7 +38,6 @@ export const cancelOrder = async (accessToken, orderId, body, dispatch) => {
         Authorization: `Bearer ${accessToken}`,
       },
     });
-    console.log(res.data)
     getOrder(accessToken, dispatch);
     return true;
   } catch (err) {

@@ -13,13 +13,13 @@ const reviewsSlice = createSlice({
       state.reviewList = [...state.reviewList, action.payload.data];
     },
     updateReviewSuccess: (state, action) => {
-      const updatedObj = action.payload;
-      state.reviewList = state.reviewList.map((obj) => {
-        if (obj.id === updatedObj.id) {
-          return updatedObj;
-        }
-        return obj;
-      });
+      // const updatedObj = action.payload;
+      // state.reviewList = state.reviewList.map((obj) => {
+      //   if (obj.id === updatedObj.id) {
+      //     return updatedObj;
+      //   }
+      //   return obj;
+      // });
     },
     deleteReviewSuccess: (state, action) => {
       state.reviewList = state.reviewList.filter((obj) => obj.id !== action.payload);

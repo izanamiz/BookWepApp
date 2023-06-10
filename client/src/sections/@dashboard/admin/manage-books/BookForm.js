@@ -10,17 +10,17 @@ import {
   Stack,
   MenuItem,
   Card,
-  CardMedia,
   styled,
-  Box,
 } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import Iconify from '../../../../components/iconify/Iconify';
 import { getGenres } from '../../../../services/genres/genresRequest';
 import Label from '../../../../components/label/Label';
 import { addBook, updateBook } from '../../../../services/books/booksRequest';
 import { showErrorToast, showSuccessToast } from '../../../../utils/toastUtil';
+import { momentDate } from '../../../../utils/formatTime';
+import { BookFormValidationSchema } from '../../../../utils/validation';
 
 const StyledProductImg = styled('img')({
   top: 0,
@@ -42,16 +42,29 @@ export default function BookForm({ book }) {
     bookCover: book ? book.bookCover : '',
     bookPages: book ? book.bookPages : 0,
     bookPlot: book ? book.bookPlot : '',
-    bookReleaseDate: book ? book.bookReleaseDate : '',
+    bookReleaseDate: book ? momentDate(book?.bookReleaseDate, 'YYYY-MM-DD') : '',
     bookGenre: book ? book.bookGenre?.id : null,
   });
 
+  const [errors, setErrors] = useState({});
   const [open, setOpen] = useState(false);
   const [isDisabled, setIsDisabled] = useState(!!book);
+
+  const isFieldValid = (fieldName) => !errors[fieldName];
+
+  const getFieldError = (fieldName) => errors[fieldName] || '';
 
   useEffect(() => {
     setIsDisabled(!!book);
   }, [book]);
+
+  useEffect(() => {
+    setIsDisabled(!!book);
+  }, []);
+
+  useEffect(() => {
+    getGenres(token, dispatch).then((res) => setGenreList(res.data));
+  }, [token, dispatch]);
 
   function handleClickOpen() {
     setOpen(true);
@@ -75,52 +88,63 @@ export default function BookForm({ book }) {
     setIsDisabled((prev) => !prev);
   };
 
-  useEffect(() => {
-    setIsDisabled(!!book);
-  }, []);
-
-  useEffect(() => {
-    getGenres(token, dispatch).then((res) => setGenreList(res.data));
-  }, [token, dispatch]);
-
-  const handleUpdateBook = () => {
-    const body = {
-      book_title: formData.bookTitle,
-      book_author: formData.bookAuthor,
-      book_cover: formData.bookCover,
-      book_pages: formData.bookPages,
-      book_plot: formData.bookPlot,
-      book_release_date: formData.bookReleaseDate,
-      book_genre: { id: formData.bookGenre },
-    };
-    updateBook(token, book.id, body, dispatch).then((res) => {
-      if (res) {
-        showSuccessToast('Update Book Successfully');
-      } else {
-        showErrorToast('Update Book Failed');
-      }
-    });
-    setOpen(false);
+  const handleUpdateBook = async () => {
+    try {
+      await BookFormValidationSchema.validate(formData, { abortEarly: false });
+      const body = {
+        book_title: formData.bookTitle,
+        book_author: formData.bookAuthor,
+        book_cover: formData.bookCover,
+        book_pages: formData.bookPages,
+        book_plot: formData.bookPlot,
+        book_release_date: formData.bookReleaseDate,
+        book_genre: { id: formData.bookGenre },
+      };
+      updateBook(token, book.id, body, dispatch).then((res) => {
+        if (res) {
+          showSuccessToast('Update Book Successfully');
+        } else {
+          showErrorToast('Update Book Failed');
+        }
+      });
+      setOpen(false);
+    } catch (error) {
+      const fieldErrors = {};
+      error.inner.forEach((validationError) => {
+        fieldErrors[validationError.path] = validationError.message;
+      });
+      setErrors(fieldErrors);
+    }
   };
 
-  const handleAddBook = () => {
-    const body = {
-      book_title: formData.bookTitle,
-      book_author: formData.bookAuthor,
-      book_cover: formData.bookCover,
-      book_pages: formData.bookPages,
-      book_plot: formData.bookPlot,
-      book_release_date: formData.bookReleaseDate,
-      book_genre: { id: formData.bookGenre },
-    };
-    addBook(token, body, dispatch).then((res) => {
-      if (res) {
-        showSuccessToast('Add Book Successfully');
-      } else {
-        showErrorToast('Add Book Failed');
-      }
-    });
-    setOpen(false);
+  const handleAddBook = async () => {
+    try {
+      await BookFormValidationSchema.validate(formData, { abortEarly: false });
+
+      const body = {
+        book_title: formData.bookTitle,
+        book_author: formData.bookAuthor,
+        book_cover: formData.bookCover,
+        book_pages: formData.bookPages,
+        book_plot: formData.bookPlot,
+        book_release_date: formData.bookReleaseDate,
+        book_genre: { id: formData.bookGenre },
+      };
+      addBook(token, body, dispatch).then((res) => {
+        if (res) {
+          showSuccessToast('Add Book Successfully');
+        } else {
+          showErrorToast('Add Book Failed');
+        }
+      });
+      setOpen(false);
+    } catch (error) {
+      const fieldErrors = {};
+      error.inner.forEach((validationError) => {
+        fieldErrors[validationError.path] = validationError.message;
+      });
+      setErrors(fieldErrors);
+    }
   };
   return (
     <>
@@ -149,6 +173,8 @@ export default function BookForm({ book }) {
                       name="bookTitle"
                       value={formData.bookTitle}
                       onChange={handleChange}
+                      error={!isFieldValid('bookTitle')}
+                      helperText={getFieldError('bookTitle')}
                       sx={{ width: '100%' }}
                     />
                     <TextField
@@ -158,6 +184,8 @@ export default function BookForm({ book }) {
                       name="bookAuthor"
                       value={formData.bookAuthor}
                       onChange={handleChange}
+                      error={!isFieldValid('bookAuthor')}
+                      helperText={getFieldError('bookAuthor')}
                       sx={{ width: '100%' }}
                     />
                   </Stack>
@@ -170,6 +198,8 @@ export default function BookForm({ book }) {
                     name="bookPlot"
                     value={formData.bookPlot}
                     onChange={handleChange}
+                    error={!isFieldValid('bookPlot')}
+                    helperText={getFieldError('bookPlot')}
                     sx={{ width: '100%' }}
                     multiline
                     rows={4}
@@ -185,6 +215,7 @@ export default function BookForm({ book }) {
                         type="date"
                         name="bookReleaseDate"
                         value={formData.bookReleaseDate}
+                        required
                         onChange={handleChange}
                       />
                     </Grid>
@@ -197,6 +228,8 @@ export default function BookForm({ book }) {
                         name="bookPages"
                         value={formData.bookPages}
                         onChange={handleChange}
+                        error={!isFieldValid('bookPages')}
+                        helperText={getFieldError('bookPages')}
                         sx={{ width: '100%' }}
                       />
                     </Grid>
@@ -212,6 +245,8 @@ export default function BookForm({ book }) {
                     label="Genre Name"
                     name="bookGenre"
                     value={formData.bookGenre || ''}
+                    error={!isFieldValid('bookGenre')}
+                    helperText={getFieldError('bookGenre')}
                     onChange={handleChange}
                   >
                     <MenuItem value="">Select Genre</MenuItem>
@@ -234,6 +269,8 @@ export default function BookForm({ book }) {
                   name="bookCover"
                   value={formData.bookCover}
                   onChange={handleChange}
+                  error={!isFieldValid('bookCover')}
+                  helperText={getFieldError('bookCover')}
                   sx={{ width: '100%' }}
                 />
                 <Card sx={{ minHeight: 200 }}>

@@ -5,17 +5,19 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Input,
   Rating,
   Stack,
   TextField,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import Label from '../../../../components/label/Label';
 import Iconify from '../../../../components/iconify/Iconify';
 import { addReview, deleteReview, updateReview } from '../../../../services/user/reviews/reviewsRequest';
 import { showErrorToast, showSuccessToast } from '../../../../utils/toastUtil';
+import { ReviewFormValidationSchema } from '../../../../utils/validation';
 
 const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {
   // 0: add, 1:update, 2: delete
@@ -27,8 +29,26 @@ const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {
   const [open, setOpen] = useState(false);
   const [action, setAction] = useState(0);
   const [rating, setRating] = useState(stars || 0);
-  const [reviewing, setReviewing] = useState(comment || '');
-  const [errors, setErrors] = useState(false);
+  // const [reviewing, setReviewing] = useState(comment || '');
+
+  const [formData, setFormData] = useState({
+    cmt: comment || '',
+  });
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const isFieldValid = (fieldName) => !errors[fieldName];
+
+  const getFieldError = (fieldName) => errors[fieldName] || '';
 
   const handleClickOpen = (a) => {
     setAction(a);
@@ -43,11 +63,9 @@ const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {
     setRating(e.target.value - 0);
   };
 
-  const handleReviewing = (e) => {
-    setReviewing(e.target.value);
-    if (e.target.value) setErrors(false);
-    else setErrors(true);
-  };
+  // const handleReviewing = (e) => {
+  //   setReviewing(e.target.value);
+  // };
 
   const handleDeleteReview = () => {
     deleteReview(token, reviewId, dispatch).then((res) => {
@@ -59,11 +77,14 @@ const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {
     });
     setOpen(false);
   };
-  const handleUpdateReview = () => {
-    if (!errors) {
+  const handleUpdateReview = async () => {
+    try {
+      await ReviewFormValidationSchema.validate(formData, { abortEarly: false });
+
       const body = {
         stars: rating,
-        comment: reviewing,
+        // comment: reviewing,
+        comment: formData.cmt,
         book: { id: bookId },
         user: { id: currentUser.id },
       };
@@ -72,19 +93,28 @@ const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {
         if (res) {
           showSuccessToast('Update review Successfully');
           setRating(0);
-          setReviewing('');
+          // setReviewing('');
+          setFormData({ ...formData, cmt: '' });
         } else {
           showErrorToast('Update review Failed');
         }
       });
       setOpen(false);
+    } catch (error) {
+      const fieldErrors = {};
+      error.inner.forEach((validationError) => {
+        fieldErrors[validationError.path] = validationError.message;
+      });
+      setErrors(fieldErrors);
     }
   };
-  const handleAddReview = () => {
-    if (!errors) {
+  const handleAddReview = async () => {
+    try {
+      await ReviewFormValidationSchema.validate(formData, { abortEarly: false });
       const body = {
         stars: rating,
-        comment: reviewing,
+        // comment: reviewing,
+        comment: formData.cmt,
         book: { id: bookId },
         user: { id: currentUser.id },
       };
@@ -92,12 +122,19 @@ const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {
         if (res) {
           showSuccessToast('Add review Successfully');
           setRating(0);
-          setReviewing('');
+          // setReviewing('');
+          setFormData({ ...formData, cmt: '' });
         } else {
           showErrorToast('Add review Failed');
         }
       });
       setOpen(false);
+    } catch (error) {
+      const fieldErrors = {};
+      error.inner.forEach((validationError) => {
+        fieldErrors[validationError.path] = validationError.message;
+      });
+      setErrors(fieldErrors);
     }
   };
 
@@ -139,13 +176,14 @@ const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {
                 margin="dense"
                 fullWidth
                 variant="standard"
-                name="comment"
-                label="Comment..."
-                value={reviewing}
-                onChange={handleReviewing}
-                required
-                error={errors}
-                helperText={'Không được để trống'}
+                name="cmt"
+                label="Comment"
+                // value={reviewing}
+                // onChange={handleReviewing}
+                value={formData.cmt}
+                onChange={handleChange}
+                error={!isFieldValid('cmt')}
+                helperText={getFieldError('cmt')}
               />
             </>
           )}
