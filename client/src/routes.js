@@ -11,6 +11,9 @@ import ManageBooksPage from './pages/admin/manage-books/ManageBooksPage';
 import ManageGenresPage from './pages/admin/manage-genres/ManageGenresPage';
 import BooksPage from './pages/user/books/BooksPage';
 import BookDetailPage from './pages/user/books/BookDetailPage';
+import CartPage from './pages/user/cart/CartPage';
+import OrderPage from './pages/user/order/OrderPage';
+import OrderDetailPage from './pages/user/order/OrderDetailPage';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +29,9 @@ export default function Router() {
         { path: 'manage-genres', element: <ManageGenresPage /> },
         { path: 'books', element: <BooksPage /> },
         { path: 'book/:bookId', element: <BookDetailPage /> },
+        { path: 'cart', element: <CartPage /> },
+        { path: 'order', element: <OrderPage /> },
+        { path: 'order/:orderId', element: <OrderDetailPage /> },
       ],
     },
     {

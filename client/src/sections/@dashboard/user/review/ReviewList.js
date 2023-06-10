@@ -16,7 +16,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { reviewListSelector } from '../../../../redux/selectors';
 
-import { getAllReviews } from '../../../../services/reviews/reviewsRequest';
+import { getAllReviews } from '../../../../services/user/reviews/reviewsRequest';
 import ReviewForm from './ReviewForm';
 import { fDate, momentDate } from '../../../../utils/formatTime';
 

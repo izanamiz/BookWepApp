@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { bookListSelector } from '../../../redux/selectors';
 import { getBooks } from '../../../services/books/booksRequest';
 import { BookList } from '../../../sections/@dashboard/user/books';
-import BookCartWidget from '../../../sections/@dashboard/user/books/BookCartWidget';
+import CartWidget from '../../../sections/@dashboard/user/cart/CartWidget';
 
 // ----------------------------------------------------------------------
 
@@ -41,8 +41,6 @@ export default function BooksPage() {
         </Typography>
 
         <BookList books={bookList} />
-
-        <BookCartWidget />
       </Container>
     </>
   );

@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 //
 import Header from './header';
 import Nav from './nav';
+import CartWidget from '../../sections/@dashboard/user/cart/CartWidget';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +35,7 @@ const Main = styled('div')(({ theme }) => ({
 
 export default function DashboardLayout() {
   const token = localStorage.getItem('token');
+  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
   const navigate = useNavigate();
   useEffect(() => {
@@ -49,6 +51,7 @@ export default function DashboardLayout() {
       <Header onOpenNav={() => setOpen(true)} />
 
       <Nav openNav={open} onCloseNav={() => setOpen(false)} />
+      {currentUser?.role === 'user' && <CartWidget />}
 
       <Main>
         <Outlet />

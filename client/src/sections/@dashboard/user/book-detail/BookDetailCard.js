@@ -70,11 +70,11 @@ export default function BookDetailCard() {
                 <TableBody>
                   <TableRow>
                     <TableCell>Ngày xuất bản</TableCell>
-                    <TableCell>{momentDate(book?.bookReleaseDate, "DD/MM/YYYY")}</TableCell>
+                    <TableCell>{momentDate(book?.bookReleaseDate, 'DD/MM/YYYY')}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Thể loại</TableCell>
-                    <TableCell>{book?.bookGenre?.genreName}</TableCell>
+                    <TableCell>{book?.bookGenre?.genreName || 'undefined'}</TableCell>
                   </TableRow>
                   <TableRow>
                     <TableCell>Số trang</TableCell>

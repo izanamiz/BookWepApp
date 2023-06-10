@@ -35,7 +35,7 @@ export default function BookCard({ product }) {
             cursor: 'pointer',
           }}
         >
-          {product?.bookGenre?.genreName}
+          {product?.bookGenre?.genreName || 'undefined'}
         </Label>
         <StyledProductImg alt={bookTitle} src={bookCover} />
       </Box>

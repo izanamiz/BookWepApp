@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 
 import Label from '../../../../components/label/Label';
 import Iconify from '../../../../components/iconify/Iconify';
-import { addReview, deleteReview, updateReview } from '../../../../services/reviews/reviewsRequest';
+import { addReview, deleteReview, updateReview } from '../../../../services/user/reviews/reviewsRequest';
 import { showErrorToast, showSuccessToast } from '../../../../utils/toastUtil';
 
 const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {

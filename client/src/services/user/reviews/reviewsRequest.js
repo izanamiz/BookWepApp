@@ -1,4 +1,4 @@
-import httpRequest from '../../config/api.config';
+import httpRequest from '../../../config/api.config';
 import { addReviewSuccess, deleteReviewSuccess, getReviewsSuccess, updateReviewSuccess } from './reviewsSlice';
 
 export const getAllReviews = async (accessToken, dispatch) => {
