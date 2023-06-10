@@ -76,7 +76,7 @@ export default function GenreForm({ genreName, genreId }) {
         fieldErrors[validationError.path] = validationError.message;
       });
       setErrors(fieldErrors);
-      console.log(fieldErrors)
+      console.log(fieldErrors);
     }
   };
 
@@ -87,11 +87,11 @@ export default function GenreForm({ genreName, genreId }) {
   return (
     <div>
       {genreId ? (
-        <Label color="success" onClick={handleClickOpen} sx={{ cursor: 'pointer' }}>
+        <Label color="success" onClick={() => handleClickOpen()} sx={{ cursor: 'pointer' }}>
           Update
         </Label>
       ) : (
-        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpen}>
+        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => handleClickOpen()}>
           New Genre
         </Button>
       )}
@@ -100,11 +100,7 @@ export default function GenreForm({ genreName, genreId }) {
         <DialogTitle>{genreId ? 'Update' : 'Add new Genre'}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {genreId ? (
-                `Bạn chắc chắn muốn thay đổi thể loại ${genreName}?`
-            ) : (
-              'Bạn chắc chắn muốn thêm thể loại mới ?'
-            )}
+            {genreId ? `Bạn chắc chắn muốn thay đổi thể loại ${genreName}?` : 'Bạn chắc chắn muốn thêm thể loại mới ?'}
           </DialogContentText>
           <TextField
             autoFocus

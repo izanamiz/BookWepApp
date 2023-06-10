@@ -1,6 +1,7 @@
-import { Avatar, Stack, TableBody, TableCell, TableRow,  Tooltip, Typography } from '@mui/material';
+import { Avatar, Stack, TableBody, TableCell, TableRow, Tooltip, Typography } from '@mui/material';
 import Label from '../../../../components/label/Label';
 import DeleteBook from './DeleteBook';
+import BookForm from './BookForm';
 
 export default function BookListBody({ filteredBooks, page, rowsPerPage }) {
   return (
@@ -24,7 +25,7 @@ export default function BookListBody({ filteredBooks, page, rowsPerPage }) {
 
             <TableCell align="left">{bookAuthor}</TableCell>
 
-            <TableCell align="left">{bookGenre?.genreName}</TableCell>
+            <TableCell align="left">{bookGenre?.genreName ? bookGenre?.genreName : 'Undefined'}</TableCell>
 
             <TableCell align="left">{bookPages}</TableCell>
 
@@ -39,10 +40,8 @@ export default function BookListBody({ filteredBooks, page, rowsPerPage }) {
 
             <TableCell align="left">
               <Stack direction="row" alignItems="center" spacing={2}>
-                <Label color="success" sx={{ cursor: 'pointer' }}>
-                  View
-                </Label>
-                <DeleteBook bookTitle={bookTitle} bookId={id}/>
+                <BookForm book={val} />
+                <DeleteBook bookTitle={bookTitle} bookId={id} />
               </Stack>
             </TableCell>
 

@@ -27,7 +27,8 @@ import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 // sections
 import { BookListBody, BookListHead, BookListToolbar } from '../../../sections/@dashboard/admin/manage-books';
-import BookForm from '../../../sections/@dashboard/admin/manage-books/BookForm';
+import BookForm from "../../../sections/@dashboard/admin/manage-books/BookForm"
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = ['ID', 'Title', 'Author', 'Genre', 'Pages', 'Plot', 'Action'];

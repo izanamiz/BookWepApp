@@ -10,39 +10,130 @@ import {
   Stack,
   MenuItem,
   Card,
+  CardMedia,
+  styled,
+  Box,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Iconify from '../../../../components/iconify/Iconify';
 import { getGenres } from '../../../../services/genres/genresRequest';
+import Label from '../../../../components/label/Label';
+import { addBook, updateBook } from '../../../../services/books/booksRequest';
+import { showErrorToast, showSuccessToast } from '../../../../utils/toastUtil';
 
-export default function BookForm() {
+const StyledProductImg = styled('img')({
+  top: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+});
+
+export default function BookForm({ book }) {
   const token = localStorage.getItem('token');
 
   const dispatch = useDispatch();
 
   const [genreList, setGenreList] = useState([]);
-  console.log(genreList);
+
+  const [formData, setFormData] = useState({
+    bookTitle: book ? book.bookTitle : '',
+    bookAuthor: book ? book.bookAuthor : '',
+    bookCover: book ? book.bookCover : '',
+    bookPages: book ? book.bookPages : 0,
+    bookPlot: book ? book.bookPlot : '',
+    bookReleaseDate: book ? book.bookReleaseDate : '',
+    bookGenre: book ? book.bookGenre?.id : null,
+  });
 
   const [open, setOpen] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(!!book);
 
-  const handleClickOpen = () => {
+  useEffect(() => {
+    setIsDisabled(!!book);
+  }, [book]);
+
+  function handleClickOpen() {
     setOpen(true);
-  };
+  }
 
   const handleClose = () => {
     setOpen(false);
   };
 
+  const handleChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+  };
+
+  const handleEdit = () => {
+    setIsDisabled((prev) => !prev);
+  };
+
+  useEffect(() => {
+    setIsDisabled(!!book);
+  }, []);
+
   useEffect(() => {
     getGenres(token, dispatch).then((res) => setGenreList(res.data));
   }, [token, dispatch]);
 
+  const handleUpdateBook = () => {
+    const body = {
+      book_title: formData.bookTitle,
+      book_author: formData.bookAuthor,
+      book_cover: formData.bookCover,
+      book_pages: formData.bookPages,
+      book_plot: formData.bookPlot,
+      book_release_date: formData.bookReleaseDate,
+      book_genre: { id: formData.bookGenre },
+    };
+    updateBook(token, book.id, body, dispatch).then((res) => {
+      if (res) {
+        showSuccessToast('Update Book Successfully');
+      } else {
+        showErrorToast('Update Book Failed');
+      }
+    });
+    setOpen(false);
+  };
+
+  const handleAddBook = () => {
+    const body = {
+      book_title: formData.bookTitle,
+      book_author: formData.bookAuthor,
+      book_cover: formData.bookCover,
+      book_pages: formData.bookPages,
+      book_plot: formData.bookPlot,
+      book_release_date: formData.bookReleaseDate,
+      book_genre: { id: formData.bookGenre },
+    };
+    addBook(token, body, dispatch).then((res) => {
+      if (res) {
+        showSuccessToast('Add Book Successfully');
+      } else {
+        showErrorToast('Add Book Failed');
+      }
+    });
+    setOpen(false);
+  };
   return (
-    <div>
-      <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={handleClickOpen}>
-        New Book
-      </Button>
+    <>
+      {book ? (
+        <Label color="success" sx={{ cursor: 'pointer' }} onClick={() => handleClickOpen()}>
+          View
+        </Label>
+      ) : (
+        <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => handleClickOpen()}>
+          New Book
+        </Button>
+      )}
+
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth={'lg'}>
         <DialogTitle>Manage Books</DialogTitle>
         <DialogContent>
@@ -51,25 +142,81 @@ export default function BookForm() {
               <Grid container spacing={5}>
                 <Grid item xs={12}>
                   <Stack direction="row" spacing={2}>
-                    <TextField label="Book Titile" sx={{ width: '100%' }} />
-                    <TextField label="Book Author" sx={{ width: '100%' }} />
+                    <TextField
+                      disabled={isDisabled}
+                      autoFocus
+                      label="Book Titile"
+                      name="bookTitle"
+                      value={formData.bookTitle}
+                      onChange={handleChange}
+                      sx={{ width: '100%' }}
+                    />
+                    <TextField
+                      disabled={isDisabled}
+                      autoFocus
+                      label="Book Author"
+                      name="bookAuthor"
+                      value={formData.bookAuthor}
+                      onChange={handleChange}
+                      sx={{ width: '100%' }}
+                    />
                   </Stack>
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField label="Book Plot" sx={{ width: '100%' }} multiline rows={4} />
+                  <TextField
+                    disabled={isDisabled}
+                    autoFocus
+                    label="Book Plot"
+                    name="bookPlot"
+                    value={formData.bookPlot}
+                    onChange={handleChange}
+                    sx={{ width: '100%' }}
+                    multiline
+                    rows={4}
+                  />
                 </Grid>
 
                 <Grid item xs={12}>
-                  <Stack direction="row" spacing={2}>
-                    <TextField label="Number" type="number" sx={{ width: '100%' }} />
-                    <TextField label="Number" type="number" sx={{ width: '100%' }} />
-                  </Stack>
+                  <Grid container spacing={5}>
+                    <Grid item xs={12} sm={6} md={6}>
+                      <input
+                        style={{ width: '100%', height: '56px' }}
+                        disabled={isDisabled}
+                        type="date"
+                        name="bookReleaseDate"
+                        value={formData.bookReleaseDate}
+                        onChange={handleChange}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={6}>
+                      <TextField
+                        disabled={isDisabled}
+                        autoFocus
+                        label="Number"
+                        type="number"
+                        name="bookPages"
+                        value={formData.bookPages}
+                        onChange={handleChange}
+                        sx={{ width: '100%' }}
+                      />
+                    </Grid>
+                  </Grid>
                 </Grid>
 
                 <Grid item xs={12}>
-                  <TextField id="outlined-select-currency" select label="Genre Name" helperText="Please select a genre">
+                  <TextField
+                    disabled={isDisabled}
+                    autoFocus
+                    id="outlined-select-currency"
+                    select
+                    label="Genre Name"
+                    name="bookGenre"
+                    value={formData.bookGenre || ''}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="">Select Genre</MenuItem>
                     {genreList.map((option) => (
-                      <MenuItem key={option.id} value={option.genreName}>
+                      <MenuItem key={option.id} value={option.id}>
                         {option.genreName}
                       </MenuItem>
                     ))}
@@ -79,18 +226,44 @@ export default function BookForm() {
             </Grid>
 
             <Grid item xs={12} sm={12} md={5}>
-              <Stack>
-                <TextField label="Book Cover Link" sx={{ width: '100%' }} />
-                <Card />
+              <Stack spacing={5}>
+                <TextField
+                  disabled={isDisabled}
+                  autoFocus
+                  label="Book Cover Link"
+                  name="bookCover"
+                  value={formData.bookCover}
+                  onChange={handleChange}
+                  sx={{ width: '100%' }}
+                />
+                <Card sx={{ minHeight: 200 }}>
+                  <StyledProductImg alt={'book cover'} src={formData.bookCover} />
+                </Card>
               </Stack>
             </Grid>
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose}>Subscribe</Button>
+          {book ? (
+            isDisabled ? (
+              <Button variant="contained" onClick={() => handleEdit()}>
+                Edit
+              </Button>
+            ) : (
+              <Button variant="contained" onClick={() => handleUpdateBook()}>
+                Save
+              </Button>
+            )
+          ) : (
+            <Button variant="contained" onClick={() => handleAddBook()}>
+              Add
+            </Button>
+          )}
+          <Button variant="contained" onClick={() => handleClose()}>
+            Close
+          </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

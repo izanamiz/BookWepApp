@@ -33,10 +33,26 @@ const booksSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
+    addBookSuccess: (state, action) => {
+      state.isFetching = false;
+      state.error = false;
+    },
+    updateBookSuccess: (state, action) => {
+      state.isFetching = false;
+      state.error = false;
+    },
   },
 });
 
-export const { getBooksStart, getBooksSuccess, getBooksFailed, deleteBookStart, deleteBookSuccess, deleteBookFailed } =
-  booksSlice.actions;
+export const {
+  getBooksStart,
+  getBooksSuccess,
+  getBooksFailed,
+  deleteBookStart,
+  deleteBookSuccess,
+  deleteBookFailed,
+  addBookSuccess,
+  updateBookSuccess,
+} = booksSlice.actions;
 
 export default booksSlice.reducer;
