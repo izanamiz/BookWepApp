@@ -19,7 +19,9 @@ export const BookFormValidationSchema = Yup.object().shape({
   bookTitle: Yup.string().required('Title is required'),
   bookAuthor: Yup.string().required('Author is required'),
   bookCover: Yup.string().required('Book Cover is required'),
-  bookPages: Yup.string().required('Genre name is required'),
+  bookPages: Yup.number()
+  .required('Pages is required')
+  .min(0, 'Pages must be greater than or equal to 0'),
   bookPlot: Yup.string().required('Book Plot is required'),
   bookReleaseDate: Yup.string().required('Book Release Date is required'),
   bookGenre: Yup.string().required('Book Genre is required'),

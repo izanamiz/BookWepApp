@@ -107,6 +107,7 @@ export default function BookForm({ book }) {
           showErrorToast('Update Book Failed');
         }
       });
+      setErrors({})
       setOpen(false);
     } catch (error) {
       const fieldErrors = {};
@@ -137,6 +138,7 @@ export default function BookForm({ book }) {
           showErrorToast('Add Book Failed');
         }
       });
+      setErrors({})
       setOpen(false);
     } catch (error) {
       const fieldErrors = {};

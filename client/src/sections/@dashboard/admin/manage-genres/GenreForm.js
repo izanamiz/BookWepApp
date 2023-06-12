@@ -48,6 +48,7 @@ export default function GenreForm({ genreName, genreId }) {
           showErrorToast('Add new Genre Failed');
         }
       });
+      setErrors({})
       setOpen(false);
     } catch (error) {
       const fieldErrors = {};
@@ -69,6 +70,7 @@ export default function GenreForm({ genreName, genreId }) {
           showErrorToast('Update Failed');
         }
       });
+      setErrors({})
       setOpen(false);
     } catch (error) {
       const fieldErrors = {};

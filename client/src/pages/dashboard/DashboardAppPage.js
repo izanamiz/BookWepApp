@@ -10,12 +10,6 @@ import { AppWidgetSummary } from '../../sections/@dashboard/app';
 // ----------------------------------------------------------------------
 
 export default function DashboardAppPage() {
-  const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (currentUser.role === 'user') navigate('/dashboard/books');
-  }, [currentUser]);
   return (
     <>
       <Helmet>

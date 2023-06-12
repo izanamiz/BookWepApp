@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 
 import Label from '../../../../components/label/Label';
 import Iconify from '../../../../components/iconify/Iconify';
-import { addReview, deleteReview, updateReview } from '../../../../services/user/reviews/reviewsRequest';
+import { addReview, deleteReview, getAllReviews, updateReview } from '../../../../services/user/reviews/reviewsRequest';
 import { showErrorToast, showSuccessToast } from '../../../../utils/toastUtil';
 import { ReviewFormValidationSchema } from '../../../../utils/validation';
 
@@ -95,6 +95,7 @@ const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {
           setRating(0);
           // setReviewing('');
           setFormData({ ...formData, cmt: '' });
+          setErrors({});
         } else {
           showErrorToast('Update review Failed');
         }
@@ -124,6 +125,7 @@ const ReviewForm = ({ reviewId, stars, comment, bookId, userId }) => {
           setRating(0);
           // setReviewing('');
           setFormData({ ...formData, cmt: '' });
+          setErrors({});
         } else {
           showErrorToast('Add review Failed');
         }

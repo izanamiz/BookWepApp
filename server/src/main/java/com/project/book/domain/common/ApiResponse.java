@@ -26,5 +26,4 @@ public class ApiResponse<T> {
     private ApiResponseStatus status;
 
     private T data;
-
 }
